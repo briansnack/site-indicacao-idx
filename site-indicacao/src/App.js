@@ -38,7 +38,7 @@ function App() {
         <Login setIsAuthenticated={setIsAuthenticated} setUserType={setUserType} />
       )}
 
-      <footer className="footer">© 2024 Seja IDX. Todos os direitos reservados.</footer>
+      <footer className="footer">© 2024 IDX Company. Todos os direitos reservados.</footer>
 
       <button className="toggle-theme" onClick={toggleDarkMode}>
         <img

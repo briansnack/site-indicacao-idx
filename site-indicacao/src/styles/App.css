@@ -1,62 +1,69 @@
-/* Remover margens e preenchimentos padrões do body e html */
+/* Resetando margens e preenchimentos padrão */
 body, html { 
   margin: 0; 
   padding: 0; 
   width: 100%; 
   height: 100%;
-  font-family: Arial, sans-serif; /* Aplica a fonte Arial para todo o site */
+  font-family: Arial, sans-serif;
 }
-/* Modo claro */
+
+/* Estilos para o modo claro */
 .light-mode {
   background-color: #ffffff;
   color: #121212;
 }
 
-.light-mode .header {
-  background-color: #f0f0f0;
-  color: #121212;
-}
-
+/* Footer no modo claro */
 .light-mode .footer {
   background-color: #f0f0f0;
   color: #121212;
+  height: 28px; 
+  font-size: 16px; 
+  display: flex; 
+  align-items: center; 
+  justify-content: center; 
+  padding: 0 10px; 
 }
 
+/* Botão de alternância de tema no modo claro */
 .light-mode .toggle-theme {
   background-color: transparent;
   color: #ffffff;
 }
 
 .light-mode .toggle-theme img {
-  filter: invert(0); /* Ícone na cor original */
+  filter: invert(0); 
 }
 
-/* Modo escuro */
+/* Estilos para o modo escuro */
 .dark-mode {
   background-color: #121212;
   color: #e0e0e0;
 }
 
-.dark-mode .header {
-  background-color: #1e1e1e;
-  color: #e0e0e0;
-}
-
+/* Footer no modo escuro */
 .dark-mode .footer {
   background-color: #1e1e1e;
   color: #e0e0e0;
+  height: 28px; 
+  font-size: 16px; 
+  display: flex; 
+  align-items: center; 
+  justify-content: center; 
+  padding: 0 10px; 
 }
 
+/* Botão de alternância de tema no modo escuro */
 .dark-mode .toggle-theme {
   background-color: transparent;
   color: #121212;
 }
 
 .dark-mode .toggle-theme img {
-  filter: invert(1); /* Ícone branco */
+  filter: invert(1); 
 }
 
-/* Botão para alternar tema */
+/* Botão para alternar o tema */
 .toggle-theme {
   position: fixed;
   bottom: 20px;
@@ -80,7 +87,7 @@ body, html {
   display: block;
 }
 
-/* Efeito ao passar o mouse */
+/* Efeito ao passar o mouse sobre o botão de alternância */
 .toggle-theme:hover {
   transform: scale(1.1);
   opacity: 0.8;
@@ -95,7 +102,7 @@ body, html {
   content: url('https://cdn-icons-png.flaticon.com/128/5311/5311069.png');
 }
 
-/* Estilos Globais e Básicos */
+/* Estilos globais e básicos */
 .App {
   text-align: center;
   min-height: 100vh;
@@ -112,29 +119,6 @@ body, html {
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
     animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
   }
 }
 
@@ -155,6 +139,7 @@ body, html {
   width: 35%;
 }
 
+/* Estilos para tabelas */
 table {
   width: 100%;
   border-collapse: collapse;
@@ -195,7 +180,7 @@ button[type="submit"]:hover {
   background-color: #45a049;
 }
 
-/* Estilos Específicos para a Tabela de Serviços */
+/* Estilos para a Tabela de Serviços */
 .services-table {
   width: 100%;
   border-collapse: collapse;
