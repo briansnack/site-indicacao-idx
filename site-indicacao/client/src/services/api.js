@@ -2,7 +2,7 @@ import axios from 'axios';
 
 // Configuração da base URL da API
 const api = axios.create({
-  baseURL: 'https://sua-api.com/api/',  // Substitua pelo endereço da sua API
+  baseURL: process.env.REACT_APP_API_BASE_URL || 'https://sua-api.com/api/',  // Use variável de ambiente para baseURL
   timeout: 5000, // Timeout para requisições
 });
 
@@ -12,7 +12,7 @@ export const login = async (email, password) => {
     const response = await api.post('/login', { email, password });
     return response.data;
   } catch (error) {
-    console.error("Erro no login:", error);
+    console.error("Erro no login:", error.response ? error.response.data : error.message);
     throw error;
   }
 };
@@ -23,7 +23,7 @@ export const getIndications = async () => {
     const response = await api.get('/indications');
     return response.data;
   } catch (error) {
-    console.error("Erro ao obter indicações:", error);
+    console.error("Erro ao obter indicações:", error.response ? error.response.data : error.message);
     throw error;
   }
 };
@@ -34,7 +34,7 @@ export const updateIndicationStatus = async (id, status) => {
     const response = await api.put(`/indications/${id}`, { status });
     return response.data;
   } catch (error) {
-    console.error("Erro ao atualizar o status da indicação:", error);
+    console.error("Erro ao atualizar o status da indicação:", error.response ? error.response.data : error.message);
     throw error;
   }
 };
@@ -45,7 +45,7 @@ export const createIndication = async (data) => {
     const response = await api.post('/indications', data);
     return response.data;
   } catch (error) {
-    console.error("Erro ao criar a indicação:", error);
+    console.error("Erro ao criar a indicação:", error.response ? error.response.data : error.message);
     throw error;
   }
 };
@@ -56,7 +56,7 @@ export const getIndicationStatus = async (id) => {
     const response = await api.get(`/indications/${id}`);
     return response.data;
   } catch (error) {
-    console.error("Erro ao obter status da indicação:", error);
+    console.error("Erro ao obter status da indicação:", error.response ? error.response.data : error.message);
     throw error;
   }
 };

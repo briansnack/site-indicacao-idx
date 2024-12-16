@@ -1,44 +1,9 @@
 import React, { useState, useEffect } from 'react';
-
-// Lista inicial de indicações para demonstração
-const initialAdminIndications = [
-  {
-    id: 1,
-    client: "Cliente 1",
-    service: "Serviço 1",
-    status: "Fechado",
-    indicated: { name: "Indicado 1", phone: "123456789", email: "indicado1@example.com" },
-    referrer: { name: "Parceiro 1", email: "parceiro1@example.com" },
-    observations: "Observação inicial 1"
-  },
-  {
-    id: 2,
-    client: "Cliente 2",
-    service: "Serviço 2",
-    status: "Negociação",
-    indicated: { name: "Indicado 2", phone: "987654321", email: "indicado2@example.com" },
-    referrer: { name: "Parceiro 2", email: "parceiro2@example.com" },
-    observations: "Observação inicial 2"
-  },
-  {
-    id: 3,
-    client: "Cliente 3",
-    service: "Serviço 3",
-    status: "Negado",
-    indicated: { name: "Indicado 3", phone: "1122334455", email: "indicado3@example.com" },
-    referrer: { name: "Parceiro 3", email: "parceiro3@example.com" },
-    observations: "Observação inicial 3"
-  }
-];
+import axios from 'axios';
 
 const AdminDashboard = ({ newIndications = [] }) => {
-  const [indications, setIndications] = useState([...initialAdminIndications, ...newIndications]);
-  const [statusMap, setStatusMap] = useState(
-    indications.reduce((acc, ind) => {
-      acc[ind.id] = ind.status;
-      return acc;
-    }, {})
-  );
+  const [indications, setIndications] = useState([]);
+  const [statusMap, setStatusMap] = useState({});
   const [tempStatusMap, setTempStatusMap] = useState({});
   const [adminObservations, setAdminObservations] = useState({});
 
@@ -46,8 +11,23 @@ const AdminDashboard = ({ newIndications = [] }) => {
   const [filterEmail, setFilterEmail] = useState('');
 
   useEffect(() => {
-    setIndications([...initialAdminIndications, ...newIndications]);
-  }, [newIndications]);
+    // Buscar indicações do backend ao carregar o componente
+    const fetchIndications = async () => {
+      try {
+        const response = await axios.get('http://localhost:5000/api/indications');
+        setIndications(response.data);
+        const initialStatusMap = response.data.reduce((acc, ind) => {
+          acc[ind.id] = ind.status;
+          return acc;
+        }, {});
+        setStatusMap(initialStatusMap);
+      } catch (error) {
+        console.error("Erro ao carregar indicações:", error);
+      }
+    };
+
+    fetchIndications();
+  }, []);
 
   const handleTempStatusChange = (id, newStatus) => {
     setTempStatusMap((prevTempStatusMap) => ({ ...prevTempStatusMap, [id]: newStatus }));
@@ -57,7 +37,7 @@ const AdminDashboard = ({ newIndications = [] }) => {
     setAdminObservations((prevObservations) => ({ ...prevObservations, [id]: observation }));
   };
 
-  const handleStatusChange = (id) => {
+  const handleStatusChange = async (id) => {
     const newStatus = tempStatusMap[id] || statusMap[id];
     const newObservation = adminObservations[id] || '';
 
@@ -67,7 +47,18 @@ const AdminDashboard = ({ newIndications = [] }) => {
         indication.id === id ? { ...indication, status: newStatus, adminObservation: newObservation } : indication
       )
     );
-    alert(`Status do cliente ${id} alterado para "${newStatus}" com observação: "${newObservation}"`);
+
+    try {
+      // Atualizar o status e observação no backend
+      await axios.put(`http://localhost:5000/api/indications/${id}`, {
+        status: newStatus,
+        adminObservation: newObservation,
+      });
+
+      alert(`Status do cliente ${id} alterado para "${newStatus}" com observação: "${newObservation}"`);
+    } catch (error) {
+      console.error("Erro ao atualizar status:", error);
+    }
   };
 
   const handleFilterChange = (e, type) => {
@@ -137,7 +128,7 @@ const AdminDashboard = ({ newIndications = [] }) => {
                 </td>
                 <td>{indication.service}</td>
                 <td>{statusMap[indication.id]}</td>
-                <td>{indication.observations}</td> {/* Observação do Indicador */}
+                <td>{indication.observations}</td>
                 <td>
                   <textarea
                     placeholder="Observação do Admin"

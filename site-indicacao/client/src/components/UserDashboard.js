@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 
 const services = [
   { category: "SISTEMAS", name: "Serviço Sistema 1" },
@@ -12,13 +13,26 @@ const services = [
   { category: "CERTIFICADO DIGITAL", name: "Serviço Certificado Digital 3" }
 ];
 
-const UserDashboard = ({ onNewIndication, adminIndications }) => {
+const UserDashboard = ({ userId }) => {
   const [newClient, setNewClient] = useState({ name: '', phone: '', email: '' });
   const [selectedServices, setSelectedServices] = useState({});
   const [viewingStatus, setViewingStatus] = useState(false);
   const [activeCategory, setActiveCategory] = useState('');
   const [indications, setIndications] = useState([]);
   const [observations, setObservations] = useState('');
+
+  // Fetch indications from backend
+  useEffect(() => {
+    const fetchIndications = async () => {
+      try {
+        const response = await axios.get(`/api/indications/user/${userId}`);
+        setIndications(response.data);
+      } catch (error) {
+        console.error("Error fetching indications:", error);
+      }
+    };
+    fetchIndications();
+  }, [userId]);
 
   const handleCategoryToggle = (category) => {
     setActiveCategory(activeCategory === category ? '' : category);
@@ -47,7 +61,7 @@ const UserDashboard = ({ onNewIndication, adminIndications }) => {
     setObservations(e.target.value);
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (newClient.name && newClient.phone && newClient.email) {
       if (Object.values(selectedServices).flat().length === 0) {
         alert('Por favor, selecione pelo menos um serviço.');
@@ -55,27 +69,32 @@ const UserDashboard = ({ onNewIndication, adminIndications }) => {
       }
 
       const newIndication = {
-        id: Date.now(),
         client: newClient.name,
         phone: newClient.phone,
         email: newClient.email,
         services: selectedServices,
         observations: observations,
-        status: "Pendente"
+        status: "Pendente",
+        userId: userId
       };
 
-      setIndications([...indications, newIndication]);
-      onNewIndication(newIndication);
-      alert(`Cliente indicado com sucesso! 
-      Nome: ${newClient.name}
-      Telefone: ${newClient.phone}
-      Email: ${newClient.email}
-      Serviços: ${Object.values(selectedServices).flat().join(', ')}
-      Observações: ${observations}`);
+      try {
+        await axios.post('/api/indications', newIndication);
+        alert(`Cliente indicado com sucesso! 
+        Nome: ${newClient.name}
+        Telefone: ${newClient.phone}
+        Email: ${newClient.email}
+        Serviços: ${Object.values(selectedServices).flat().join(', ')}
+        Observações: ${observations}`);
 
-      setNewClient({ name: '', phone: '', email: '' });
-      setSelectedServices({});
-      setObservations('');
+        setNewClient({ name: '', phone: '', email: '' });
+        setSelectedServices({});
+        setObservations('');
+        setIndications([...indications, newIndication]);
+      } catch (error) {
+        console.error('Error submitting indication:', error);
+        alert('Erro ao enviar indicação. Tente novamente.');
+      }
     } else {
       alert('Por favor, preencha todos os campos do cliente.');
     }
