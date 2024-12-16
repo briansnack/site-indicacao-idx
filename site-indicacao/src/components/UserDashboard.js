@@ -1,22 +1,41 @@
 import React, { useState } from 'react';
 
 const services = [
-  "Serviço 1",
-  "Serviço 2",
-  "Serviço 3",
-  "Serviço 4"
+  { category: "SISTEMAS", name: "Serviço Sistema 1" },
+  { category: "SISTEMAS", name: "Serviço Sistema 2" },
+  { category: "SISTEMAS", name: "Serviço Sistema 3" },
+  { category: "MARKETING", name: "Serviço Marketing 1" },
+  { category: "MARKETING", name: "Serviço Marketing 2" },
+  { category: "MARKETING", name: "Serviço Marketing 3" },
+  { category: "CERTIFICADO DIGITAL", name: "Serviço Certificado Digital 1" },
+  { category: "CERTIFICADO DIGITAL", name: "Serviço Certificado Digital 2" },
+  { category: "CERTIFICADO DIGITAL", name: "Serviço Certificado Digital 3" }
 ];
 
-const UserDashboard = ({ onNewIndication }) => {
-  const [selectedService, setSelectedService] = useState('');
-  const [indications, setIndications] = useState([]);
+const UserDashboard = ({ onNewIndication, adminIndications }) => {
   const [newClient, setNewClient] = useState({ name: '', phone: '', email: '' });
+  const [selectedServices, setSelectedServices] = useState({});
   const [viewingStatus, setViewingStatus] = useState(false);
+  const [activeCategory, setActiveCategory] = useState('');
+  const [indications, setIndications] = useState([]);
+  const [observations, setObservations] = useState('');
 
-  const handleServiceSelection = (service) => {
-    if (!indications.includes(service)) {
-      setIndications([...indications, service]);
-    }
+  const handleCategoryToggle = (category) => {
+    setActiveCategory(activeCategory === category ? '' : category);
+  };
+
+  const handleServiceSelection = (category, serviceName) => {
+    setSelectedServices((prevState) => {
+      const selectedCategoryServices = prevState[category] || [];
+      const updatedServices = selectedCategoryServices.includes(serviceName)
+        ? selectedCategoryServices.filter(service => service !== serviceName)
+        : [...selectedCategoryServices, serviceName];
+
+      return {
+        ...prevState,
+        [category]: updatedServices
+      };
+    });
   };
 
   const handleFormChange = (e) => {
@@ -24,26 +43,39 @@ const UserDashboard = ({ onNewIndication }) => {
     setNewClient({ ...newClient, [name]: value });
   };
 
+  const handleObservationsChange = (e) => {
+    setObservations(e.target.value);
+  };
+
   const handleSubmit = () => {
     if (newClient.name && newClient.phone && newClient.email) {
+      if (Object.values(selectedServices).flat().length === 0) {
+        alert('Por favor, selecione pelo menos um serviço.');
+        return;
+      }
+
       const newIndication = {
-        id: Date.now(), // Gera um ID único
+        id: Date.now(),
         client: newClient.name,
         phone: newClient.phone,
         email: newClient.email,
-        services: indications,
+        services: selectedServices,
+        observations: observations,
         status: "Pendente"
       };
+
+      setIndications([...indications, newIndication]);
       onNewIndication(newIndication);
       alert(`Cliente indicado com sucesso! 
-Nome: ${newClient.name}
-Telefone: ${newClient.phone}
-Email: ${newClient.email}
-Serviços: ${indications.join(', ')}`);
+      Nome: ${newClient.name}
+      Telefone: ${newClient.phone}
+      Email: ${newClient.email}
+      Serviços: ${Object.values(selectedServices).flat().join(', ')}
+      Observações: ${observations}`);
 
-      // Resetar os campos do formulário após o envio
       setNewClient({ name: '', phone: '', email: '' });
-      setIndications([]);
+      setSelectedServices({});
+      setObservations('');
     } else {
       alert('Por favor, preencha todos os campos do cliente.');
     }
@@ -67,10 +99,25 @@ Serviços: ${indications.join(', ')}`);
               <tr>
                 <th>Nome</th>
                 <th>Status</th>
+                <th>Serviços Indicados</th>
+                <th>Observações</th>
+                <th>Observação do Admin</th>
               </tr>
             </thead>
             <tbody>
-              {/* Aqui podemos adicionar a lógica para exibir status dos clientes */}
+              {indications.map((indication) => (
+                <tr key={indication.id}>
+                  <td>{indication.client}</td>
+                  <td>{indication.status}</td>
+                  <td>
+                    {Object.values(indication.services)
+                      .flat()
+                      .join(', ')}
+                  </td>
+                  <td>{indication.observations}</td>
+                  <td>{indication.adminObservation || 'Nenhuma observação'}</td>
+                </tr>
+              ))}
             </tbody>
           </table>
         </div>
@@ -103,35 +150,56 @@ Serviços: ${indications.join(', ')}`);
                 onChange={handleFormChange}
                 required
               />
+              <textarea
+                name="observations"
+                placeholder="Observações"
+                value={observations}
+                onChange={handleObservationsChange}
+                rows="4"
+              />
             </form>
           </div>
 
           <div className="services-section">
             <h3>Selecione os serviços a serem indicados</h3>
+
             <table className="services-table">
               <thead>
                 <tr>
+                  <th>Categoria</th>
                   <th>Serviço</th>
                   <th>Selecionar</th>
                 </tr>
               </thead>
               <tbody>
-                {services.map((service, index) => (
-                  <tr key={index}>
-                    <td>{service}</td>
-                    <td>
-                      <button
-                        onClick={() => handleServiceSelection(service)}
-                        className={indications.includes(service) ? 'selected' : ''}>
-                        {indications.includes(service) ? 'Selecionado' : 'Selecionar'}
-                      </button>
-                    </td>
-                  </tr>
+                {['SISTEMAS', 'MARKETING', 'CERTIFICADO DIGITAL'].map((category) => (
+                  <React.Fragment key={category}>
+                    <tr onClick={() => handleCategoryToggle(category)} className="category-row">
+                      <td colSpan="3" style={{ cursor: 'pointer', backgroundColor: '#e0e0e0' }}>
+                        <strong>{category}</strong>
+                      </td>
+                    </tr>
+                    {activeCategory === category && services
+                      .filter(service => service.category === category)
+                      .map((service) => (
+                        <tr key={service.name}>
+                          <td></td>
+                          <td>{service.name}</td>
+                          <td>
+                            <button
+                              onClick={() => handleServiceSelection(category, service.name)}
+                              className={selectedServices[category]?.includes(service.name) ? 'selected' : ''}
+                            >
+                              {selectedServices[category]?.includes(service.name) ? 'Selecionado' : 'Selecionar'}
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                  </React.Fragment>
                 ))}
               </tbody>
             </table>
 
-            {/* Botão único para enviar indicações */}
             <button onClick={handleSubmit}>Enviar Indicações</button>
           </div>
         </div>

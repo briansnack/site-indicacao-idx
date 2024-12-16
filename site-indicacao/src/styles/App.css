@@ -6,6 +6,60 @@ body, html {
   height: 100%;
   font-family: Arial, sans-serif;
 }
+/* Estilo para os campos de Login */
+.login-container input[type="email"], 
+.login-container input[type="password"] {
+  width: 25%; /* Largura menor para os campos */
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+  box-sizing: border-box;
+  margin-bottom: 12px; /* Espaçamento entre os campos */
+}
+
+/* Estilo para o modo escuro na tela de login */
+.dark-mode .login-container input[type="email"], 
+.dark-mode .login-container input[type="password"] {
+  background-color: #333;
+  color: #e0e0e0;
+  border: 1px solid #444;
+}
+
+ /* Estilos para a Tabela de Indicações no Modo Escuro */
+.dark-mode .admin-indications-table th,
+.dark-mode .admin-indications-table td {
+  color: #ffffff !important; /* Texto branco nas células da tabela no modo escuro */
+  border: 1px solid #444444; /* Borda escura para contraste */
+  padding: 12px; /* Padding para facilitar a leitura */
+  background-color: #1e1e1e; /* Fundo escuro para as células */
+}
+
+/* Estilos para a Tabela de Indicações no Modo Claro */
+.light-mode .admin-indications-table th,
+.light-mode .admin-indications-table td {
+  color: #121212 !important; /* Texto escuro nas células da tabela no modo claro */
+  border: 1px solid #ccc; /* Borda clara para contraste */
+  padding: 12px; /* Padding para facilitar a leitura */
+  background-color: #f5f5f5; /* Fundo claro para as células */
+}
+
+/* Caixa de texto de observação para status */
+.admin-indications-table textarea {
+  width: 100%;
+  padding: 5px;
+  margin-top: 5px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+  resize: vertical; /* Permite redimensionar verticalmente */
+}
+
+.dark-mode .admin-indications-table textarea {
+  background-color: #1e1e1e;
+  color: #e0e0e0;
+  border: 1px solid #444;
+}
 
 /* Estilos para o modo claro */
 .light-mode {
@@ -17,8 +71,8 @@ body, html {
 .light-mode .footer {
   background-color: #f0f0f0;
   color: #121212;
-  height: 28px; 
-  font-size: 16px; 
+  height: 32px; 
+  font-size: 14px; 
   display: flex; 
   align-items: center; 
   justify-content: center; 
@@ -28,42 +82,151 @@ body, html {
 /* Botão de alternância de tema no modo claro */
 .light-mode .toggle-theme {
   background-color: transparent;
-  color: #ffffff;
+  color: #121212;
 }
 
 .light-mode .toggle-theme img {
   filter: invert(0); 
 }
 
-/* Estilos para o modo escuro */
-.dark-mode {
-  background-color: #121212;
+/* Container geral dos campos */
+.new-indication {
+  display: block;
+  flex-wrap: wrap; /* Permite que os campos se ajustem para a próxima linha, se necessário */
+  gap: 10px; /* Espaçamento entre os campos */
+  justify-content: flex-start; /* Alinha os campos à esquerda */
+  margin-bottom: 20px; /* Espaço entre os campos e a área de observações */
+}
+
+/* Estilo para os campos de Email, Nome e Telefone */
+.new-indication input[type="text"], 
+.new-indication input[type="email"], 
+.new-indication input[type="tel"] {
+  width: 25%; /* Largura menor para os campos */
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+  box-sizing: border-box;
+  margin-bottom: 12px; /* Espaçamento entre os campos */
+}
+
+/* Estilo para o campo de observações */
+.new-indication textarea {
+  width: 60%; /* Ocupa toda a largura disponível */
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+  box-sizing: border-box;
+  resize: vertical; /* Permite redimensionar verticalmente */
+  margin-top: 10px; /* Espaçamento superior entre os campos */
+  height: 60px; /* Tamanho inicial */
+  transition: all 0.3s ease; /* Animação suave ao expandir */
+}
+
+/* Expansão do campo de observações ao clicar */
+.new-indication textarea:focus {
+  height: 120px; /* Aumenta a altura ao clicar */
+  border-color: #007bff; /* Borda de destaque ao clicar */
+  outline: none; /* Remove contorno padrão do navegador */
+}
+
+/* Estilo para o modo escuro */
+.dark-mode .new-indication input[type="text"],
+.dark-mode .new-indication input[type="email"],
+.dark-mode .new-indication input[type="tel"] {
+  background-color: #333;
   color: #e0e0e0;
+  border: 1px solid #444;
+}
+
+.dark-mode .new-indication textarea {
+  background-color: #1e1e1e;
+  color: #e0e0e0;
+  border: 1px solid #444;
+}
+
+.dark-mode .new-indication textarea:focus {
+  border-color: #5bc0de; /* Borda de destaque no modo escuro */
 }
 
 /* Footer no modo escuro */
 .dark-mode .footer {
-  background-color: #1e1e1e;
-  color: #e0e0e0;
-  height: 28px; 
-  font-size: 16px; 
+  background-color: #000000;
+  color: #ffffff;
+  height: 32px; 
+  font-size: 14px; 
   display: flex; 
   align-items: center; 
   justify-content: center; 
   padding: 0 10px; 
 }
 
-/* Botão de alternância de tema no modo escuro */
+/* Estilos para o modo escuro */
+.dark-mode {
+  background-color: #121212; /* Fundo escuro para o corpo */
+  color: #e0e0e0; /* Texto claro para contraste */
+}
+
+/* Modificar cor de fundo e texto de tabelas e células */
+.dark-mode table {
+  background-color: #1e1e1e;  /* Fundo mais escuro para a tabela */
+  color: #ffffff;  /* Texto branco para contraste */
+  border-collapse: collapse;
+}
+
+.dark-mode th, .dark-mode td {
+  border: 1px solid #444444;  /* Borda visível escura para contraste */
+  padding: 12px; /* Aumentando o padding para facilitar o clique */
+  text-align: left;
+}
+
+/* Tabela no modo claro */
+.light-mode th, .light-mode td {
+  border: 1px solid #444444;  /* Borda visível escura para contraste */
+  padding: 12px; /* Aumentando o padding para facilitar o clique */
+  text-align: left;
+}
+
+.dark-mode th {
+  background-color: #000000;  /* Fundo escuro para cabeçalho */
+}
+
+.dark-mode td {
+  background-color: #000000;  /* Fundo escuro nas células */
+  color: #ffffff; /* Texto claro nas células */
+}
+
+.dark-mode tr:hover {
+  background-color: #000000; /* Destacar linha ao passar o mouse */
+}
+
+/* Estilos para o botão de alternância de tema */
 .dark-mode .toggle-theme {
   background-color: transparent;
-  color: #121212;
+  color: #e0e0e0;
+  border: none;
+  margin-bottom: 15px;
 }
 
 .dark-mode .toggle-theme img {
-  filter: invert(1); 
+  filter: invert(1);
 }
 
-/* Botão para alternar o tema */
+.light-mode .toggle-theme {
+  background-color: transparent;
+  color: #000000;
+  border: none;
+  margin-bottom: 15px;
+}
+
+/* Ajustes para garantir boa leitura em texto */
+.dark-mode, .dark-mode .user-dashboard, .dark-mode .user-dashboard-content, .dark-mode .new-indication, .dark-mode .services-section {
+  color: #ffffff; /* Texto branco nas seções do modo escuro */
+}
+
+/* Botão de alternância de tema */
 .toggle-theme {
   position: fixed;
   bottom: 20px;
@@ -131,8 +294,31 @@ body, html {
 }
 
 .indicated-clients {
+  justify-content: center; /* Centraliza horizontalmente */
+  align-items: center; /* Centraliza verticalmente */
+  flex-direction: column;
   width: 60%;
   margin-right: 20px;
+}
+
+/* Estilos para a Tabela de Indicações no Modo Escuro */
+.dark-mode .indicated-clients th, 
+.dark-mode .indicated-clients td {
+  color: #ffffff !important; /* Texto completamente branco nas células da tabela no modo escuro */
+  border: 1px solid #444444; /* Borda escura para manter o contraste */
+  padding: 12px; /* Aumentando o padding para facilitar o clique */
+  text-align: left; /* Alinhamento do texto à esquerda */
+  background-color: #1e1e1e; /* Fundo escuro para as células */
+}
+
+/* Estilos para a Tabela de Indicações no Modo Claro */
+.light-mode .indicated-clients th, 
+.light-mode .indicated-clients td {
+  color: #121212 !important; /* Texto escuro nas células da tabela no modo claro */
+  border: 1px solid #ccc; /* Borda clara para manter o contraste */
+  padding: 12px; /* Aumentando o padding para facilitar o clique */
+  text-align: left; /* Alinhamento do texto à esquerda */
+  background-color: #f5f5f5; /* Fundo claro para as células */
 }
 
 .services-section {
@@ -148,8 +334,9 @@ table {
 
 th, td {
   border: 1px solid #ccc;
-  padding: 10px;
+  padding: 12px;
   text-align: left;
+  color: #121212; /* Texto escuro nas tabelas no modo claro */
 }
 
 select, button {
@@ -162,6 +349,7 @@ button {
   color: white;
   border: none;
   cursor: pointer;
+  border-radius: 3px;
 }
 
 button:hover {
@@ -188,8 +376,17 @@ button[type="submit"]:hover {
 
 .services-table th, .services-table td {
   border: 1px solid #ddd;
-  padding: 8px;
+  padding: 12px;
   text-align: left;
+  color: #121212; /* Texto escuro nas células da tabela no modo claro */
+}
+
+/* Estilos para a Tabela de Serviços no Modo Escuro */
+.dark-mode .services-table th, .dark-mode .services-table td {
+  border: 1px solid #444444;
+  padding: 12px;
+  text-align: left;
+  color: #b0b0b0; /* Texto cinza mais escuro nas células da tabela no modo escuro */
 }
 
 .services-table button {
@@ -210,7 +407,7 @@ button[type="submit"]:hover {
 
 /* Estilos para Botão de Envio */
 button[type="submit"] {
-  background-color: #4CAF50;
+  background-color: #007bff;
   color: white;
   padding: 15px 32px;
   font-size: 16px;
@@ -218,7 +415,7 @@ button[type="submit"] {
 }
 
 button[type="submit"]:hover {
-  background-color: #45a049;
+  background-color: #094688;
 }
 
 /* Responsividade - Ajustes para telas menores */
