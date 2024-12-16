@@ -1,0 +1,304 @@
+/* Remover margens e preenchimentos padrões do body e html */
+body, html { 
+  margin: 0; 
+  padding: 0; 
+  width: 100%; 
+  height: 100%;
+  font-family: Arial, sans-serif; /* Aplica a fonte Arial para todo o site */
+}
+/* Modo claro */
+.light-mode {
+  background-color: #ffffff;
+  color: #121212;
+}
+
+.light-mode .header {
+  background-color: #f0f0f0;
+  color: #121212;
+}
+
+.light-mode .footer {
+  background-color: #f0f0f0;
+  color: #121212;
+}
+
+.light-mode .toggle-theme {
+  background-color: transparent;
+  color: #ffffff;
+}
+
+.light-mode .toggle-theme img {
+  filter: invert(0); /* Ícone na cor original */
+}
+
+/* Modo escuro */
+.dark-mode {
+  background-color: #121212;
+  color: #e0e0e0;
+}
+
+.dark-mode .header {
+  background-color: #1e1e1e;
+  color: #e0e0e0;
+}
+
+.dark-mode .footer {
+  background-color: #1e1e1e;
+  color: #e0e0e0;
+}
+
+.dark-mode .toggle-theme {
+  background-color: transparent;
+  color: #121212;
+}
+
+.dark-mode .toggle-theme img {
+  filter: invert(1); /* Ícone branco */
+}
+
+/* Botão para alternar tema */
+.toggle-theme {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  background: none !important;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 50px;
+  height: 50px;
+  padding: 0;
+  z-index: 1000;
+}
+
+.toggle-theme img {
+  width: 40px;
+  height: 40px;
+  display: block;
+}
+
+/* Efeito ao passar o mouse */
+.toggle-theme:hover {
+  transform: scale(1.1);
+  opacity: 0.8;
+}
+
+/* Ícones específicos para cada tema */
+.light-mode .toggle-theme img {
+  content: url('https://cdn-icons-png.flaticon.com/512/414/414891.png');
+}
+
+.dark-mode .toggle-theme img {
+  content: url('https://cdn-icons-png.flaticon.com/128/5311/5311069.png');
+}
+
+/* Estilos Globais e Básicos */
+.App {
+  text-align: center;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Estilos para o Dashboard do Usuário */
+.user-dashboard-content {
+  display: flex;
+  justify-content: space-between;
+  margin: 20px;
+  flex-wrap: wrap;
+}
+
+.indicated-clients {
+  width: 60%;
+  margin-right: 20px;
+}
+
+.services-section {
+  width: 35%;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+th, td {
+  border: 1px solid #ccc;
+  padding: 10px;
+  text-align: left;
+}
+
+select, button {
+  padding: 10px;
+  margin: 10px 0;
+}
+
+button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+button.selected {
+  background-color: #28a745;
+}
+
+button[type="submit"] {
+  background-color: #4CAF50;
+}
+
+button[type="submit"]:hover {
+  background-color: #45a049;
+}
+
+/* Estilos Específicos para a Tabela de Serviços */
+.services-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.services-table th, .services-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+.services-table button {
+  background-color: #f0ad4e;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+.services-table button.selected {
+  background-color: #5bc0de;
+}
+
+.services-table button:hover {
+  background-color: #f0a500;
+}
+
+/* Estilos para Botão de Envio */
+button[type="submit"] {
+  background-color: #4CAF50;
+  color: white;
+  padding: 15px 32px;
+  font-size: 16px;
+  border-radius: 5px;
+}
+
+button[type="submit"]:hover {
+  background-color: #45a049;
+}
+
+/* Responsividade - Ajustes para telas menores */
+
+/* Para telas menores que 1024px (tablets e dispositivos móveis) */
+@media (max-width: 1024px) {
+  .user-dashboard-content {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .indicated-clients, .services-section {
+    width: 100%;
+    margin-right: 0;
+    margin-bottom: 20px;
+  }
+
+  .services-table th, .services-table td {
+    font-size: 14px;
+  }
+
+  table {
+    margin-top: 10px;
+  }
+
+  button[type="submit"] {
+    width: 100%;
+  }
+}
+
+/* Para telas menores que 768px (smartphones) */
+@media (max-width: 768px) {
+  .user-dashboard-content {
+    padding: 10px;
+  }
+
+  .indicated-clients, .services-section {
+    width: 100%;
+    margin-right: 0;
+    margin-bottom: 15px;
+  }
+
+  .services-table th, .services-table td {
+    font-size: 12px;
+  }
+
+  button[type="submit"] {
+    width: 100%;
+    font-size: 14px;
+  }
+}
+
+/* Para telas muito pequenas (menores que 480px) */
+@media (max-width: 480px) {
+  .user-dashboard-content {
+    padding: 5px;
+  }
+
+  .services-table th, .services-table td {
+    font-size: 12px;
+    padding: 5px;
+  }
+
+  button[type="submit"] {
+    font-size: 12px;
+    padding: 10px 20px;
+  }
+}
