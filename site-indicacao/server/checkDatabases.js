@@ -1,12 +1,12 @@
 const pool = require('./config/database');
 
-async function checkDatabases() {
+async function checkDatabaseConnection() {
   try {
-    const result = await pool.query('SELECT datname FROM pg_database');
-    console.log('Bancos de dados disponíveis:', result.rows);
+    await pool.query('SELECT 1');
+    console.log('Conexão com o banco de dados estabelecida com sucesso');
   } catch (error) {
-    console.error('Erro ao listar os bancos de dados:', error);
+    console.error('Erro ao conectar ao banco de dados:', error);
   }
 }
 
-checkDatabases();
+checkDatabaseConnection();

@@ -1,6 +1,5 @@
-// frontend/src/Login.js
 import React, { useState } from 'react';
-import { login } from './api';  // Importe a função de login do arquivo api.js
+import { login } from './api';
 
 const Login = ({ setIsAuthenticated, setUserType, setToken }) => {
   const [email, setEmail] = useState('');
@@ -11,21 +10,16 @@ const Login = ({ setIsAuthenticated, setUserType, setToken }) => {
     e.preventDefault();
 
     try {
-      // Chama a função de login da API
       const response = await login(email, password);
 
-      // Salva o token JWT e o tipo de usuário no armazenamento local
       localStorage.setItem('token', response.token);
 
-      // Configura o estado de autenticação e o tipo de usuário
       setIsAuthenticated(true);
       setUserType(response.user.role);
       setToken(response.token);
 
-      // Redirecionar ou dar um feedback ao usuário (opcional)
       alert('Login realizado com sucesso!');
     } catch (error) {
-      // Se o login falhar, exibe uma mensagem de erro
       setError('Usuário ou senha inválidos');
       console.error("Erro de login:", error);
     }
@@ -46,7 +40,7 @@ const Login = ({ setIsAuthenticated, setUserType, setToken }) => {
           />
         </div>
         <div className="form-group">
-          <label htmlFor="password">Password</label>
+          <label htmlFor="password">Senha</label>
           <input
             type="password"
             id="password"

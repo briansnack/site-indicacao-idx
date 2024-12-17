@@ -4,29 +4,29 @@ const jwt = require('jsonwebtoken');
 const pool = require('../config/database');
 const router = express.Router();
 
-// Rota de Login
 router.post('/login', async (req, res) => {
   const { email, password } = req.body;
+  console.log("Dados recebidos:", { email, password });
 
   try {
     let user = null;
     let role = null;
 
-    // Verificar o email na tabela de admins
     const [adminRows] = await pool.execute(
       'SELECT * FROM admins WHERE email = ?',
       [email]
     );
+    console.log("adminRows:", adminRows);
 
     if (adminRows.length > 0) {
       user = adminRows[0];
       role = 'admin';
     } else {
-      // Se não for admin, verificar na tabela de partners
       const [partnerRows] = await pool.execute(
         'SELECT * FROM partners WHERE email = ?',
         [email]
       );
+      console.log("partnerRows:", partnerRows);
 
       if (partnerRows.length > 0) {
         user = partnerRows[0];
@@ -34,26 +34,23 @@ router.post('/login', async (req, res) => {
       }
     }
 
-    // Se o usuário não for encontrado em nenhuma tabela
     if (!user) {
       return res.status(404).json({ message: 'Email não encontrado.' });
     }
 
-    // Comparar a senha fornecida com a senha armazenada
     const isPasswordValid = await bcrypt.compare(password, user.password);
+    console.log("isPasswordValid:", isPasswordValid);
 
     if (!isPasswordValid) {
       return res.status(401).json({ message: 'Senha incorreta.' });
     }
 
-    // Gerar token JWT
     const token = jwt.sign(
       { userId: user.id, email: user.email, role },
       process.env.JWT_SECRET,
       { expiresIn: '1h' }
     );
 
-    // Login bem-sucedido
     res.json({
       message: 'Login bem-sucedido!',
       token,
@@ -61,7 +58,7 @@ router.post('/login', async (req, res) => {
     });
   } catch (error) {
     console.error('Erro ao processar o login:', error);
-    res.status(500).json({ message: 'Erro interno no servidor.' });
+    res.status(500).json({ message: 'Erro interno no servidor.', details: error });
   }
 });
 

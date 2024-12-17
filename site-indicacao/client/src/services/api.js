@@ -17,7 +17,6 @@ export const login = async (email, password) => {
   }
 };
 
-// Função para obter todas as indicações
 export const getIndications = async () => {
   try {
     const response = await api.get('/indications');
@@ -28,7 +27,6 @@ export const getIndications = async () => {
   }
 };
 
-// Função para atualizar o status de uma indicação
 export const updateIndicationStatus = async (id, status) => {
   try {
     const response = await api.put(`/indications/${id}`, { status });
