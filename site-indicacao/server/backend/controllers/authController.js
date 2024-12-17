@@ -1,42 +1,53 @@
+// server/backend/controllers/authController.js
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const { User } = require('../models/User');
+const Admin = require('../models/Admin');
+const Partner = require('../models/Partner');
 
-const registerUser = async (req, res) => {
-  const { email, password } = req.body;
+// Registro de Partner
+const registerPartner = async (req, res) => {
+  const { name, email, password } = req.body;
+
+  if (!name || !email || !password) {
+    return res.status(400).json({ error: 'Todos os campos são obrigatórios' });
+  }
 
   try {
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, salt);
-
-    const user = await User.create({
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const partner = await Partner.create({
+      name,
       email,
       password: hashedPassword,
     });
-
-    res.status(201).json({ message: 'Usuário criado com sucesso', user });
+    res.status(201).json({ message: 'Parceiro registrado com sucesso', partner });
   } catch (error) {
-    res.status(500).json({ error: 'Erro ao criar usuário', details: error });
+    res.status(500).json({ error: 'Erro ao registrar parceiro', details: error });
   }
 };
 
+// Login (Admin ou Partner)
 const loginUser = async (req, res) => {
   const { email, password } = req.body;
 
+  if (!email || !password) {
+    return res.status(400).json({ error: 'Email e senha são obrigatórios' });
+  }
+
   try {
-    const user = await User.findOne({ where: { email } });
-    if (!user) {
-      return res.status(404).json({ error: 'Usuário não encontrado' });
-    }
+    const admin = await Admin.findOne({ where: { email } });
+    const partner = await Partner.findOne({ where: { email } });
+
+    const user = admin || partner;
+    if (!user) return res.status(404).json({ error: 'Usuário não encontrado' });
 
     const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) {
-      return res.status(400).json({ error: 'Credenciais inválidas' });
-    }
+    if (!isMatch) return res.status(401).json({ error: 'Credenciais inválidas' });
 
-    const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, {
-      expiresIn: '1h',
-    });
+    const token = jwt.sign(
+      { userId: user.id, role: admin ? 'admin' : 'partner' },
+      process.env.JWT_SECRET,
+      { expiresIn: '1h' }
+    );
 
     res.status(200).json({ message: 'Login bem-sucedido', token });
   } catch (error) {
@@ -44,4 +55,4 @@ const loginUser = async (req, res) => {
   }
 };
 
-module.exports = { registerUser, loginUser };
+module.exports = { registerPartner, loginUser };

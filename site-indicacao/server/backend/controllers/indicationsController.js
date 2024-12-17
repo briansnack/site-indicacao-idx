@@ -1,7 +1,12 @@
+// server/backend/controllers/indicationsController.js
 const { Indication } = require('../models/Indication');
 
 const createIndication = async (req, res) => {
   const { clientName, phoneNumber, email, status, userId } = req.body;
+
+  if (!clientName || !phoneNumber || !email || !status || !userId) {
+    return res.status(400).json({ error: 'Todos os campos são obrigatórios' });
+  }
 
   try {
     const indication = await Indication.create({
@@ -21,6 +26,10 @@ const createIndication = async (req, res) => {
 const updateIndicationStatus = async (req, res) => {
   const { id } = req.params;
   const { status } = req.body;
+
+  if (!status) {
+    return res.status(400).json({ error: 'O status é obrigatório' });
+  }
 
   try {
     const indication = await Indication.findByPk(id);

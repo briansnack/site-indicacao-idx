@@ -1,23 +1,32 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import { login } from './api';  // Importe a função de login do arquivo api.js
 
-const Login = ({ setIsAuthenticated, setUserType }) => {
-  // Estado para armazenar os valores de username e password
-  const [username, setUsername] = useState('');
+const Login = ({ setIsAuthenticated, setUserType, setToken }) => {
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
   const handleLogin = async (e) => {
-    e.preventDefault(); // Impede o envio padrão do formulário
+    e.preventDefault();
+
     try {
-      const response = await axios.post('http://localhost:5000/api/login', { username, password });
-      if (response.status === 200) {
-        setIsAuthenticated(true);
-        setUserType(response.data.userType); // Supondo que o backend retorne o tipo de usuário
-      }
+      // Chama a função de login da API
+      const response = await login(email, password);
+
+      // Salva o token JWT e o tipo de usuário no armazenamento local
+      localStorage.setItem('token', response.token);
+
+      // Configura o estado de autenticação e o tipo de usuário
+      setIsAuthenticated(true);
+      setUserType(response.userType);
+      setToken(response.token);
+
+      // Redirecionar ou dar um feedback ao usuário (opcional)
+      alert('Login realizado com sucesso!');
     } catch (error) {
+      // Se o login falhar, exibe uma mensagem de erro
       setError('Usuário ou senha inválidos');
-      console.error("Erro de autenticação", error);
+      console.error("Erro de login:", error);
     }
   };
 
@@ -26,12 +35,12 @@ const Login = ({ setIsAuthenticated, setUserType }) => {
       <form onSubmit={handleLogin}>
         <h2>Login</h2>
         <div className="form-group">
-          <label htmlFor="username">Username</label>
+          <label htmlFor="email">Email</label>
           <input
-            type="text"
-            id="username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
+            type="email"
+            id="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
             required
           />
         </div>

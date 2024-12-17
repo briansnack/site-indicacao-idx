@@ -1,6 +1,7 @@
+// server/backend/index.js
 const express = require('express');
 const pool = require('./config/database'); // Importa o pool de conexões com o banco
-require('dotenv').config();
+require('dotenv').config(); // Carrega variáveis de ambiente do arquivo .env
 const app = express();
 const port = 5000;
 
@@ -18,10 +19,11 @@ app.use('/api', authRoutes);
 app.use('/api', indicationsRoutes);
 
 // Exemplo de rota que utiliza o banco de dados
+// Esta rota já está sendo coberta pelas rotas de /indications em indicationsRoutes
 app.get('/api/indications', async (req, res) => {
   try {
-    const result = await pool.query('SELECT * FROM indications');
-    res.json(result.rows); // Retorna as indicações do banco de dados
+    const [rows] = await pool.query('SELECT * FROM indications');
+    res.json(rows); // Retorna as indicações do banco de dados
   } catch (err) {
     console.error('Erro ao buscar indicações:', err.stack);
     res.status(500).send('Erro ao buscar indicações');

@@ -1,5 +1,7 @@
+// server/backend/routes/authRoutes.js
 const express = require('express');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 const pool = require('../config/database');
 const router = express.Router();
 
@@ -8,41 +10,73 @@ router.post('/login', async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    // Verificar se o email existe no banco
-    const [rows] = await pool.execute(
-      'SELECT * FROM users WHERE email = ?',
+    let user = null;
+    let role = null;
+
+    // Verificar o email na tabela de admins
+    const [adminRows] = await pool.execute(
+      'SELECT * FROM admins WHERE email = ?',
       [email]
     );
 
-    if (rows.length === 0) {
+    if (adminRows.length > 0) {
+      user = adminRows[0];
+      role = 'admin';
+    } else {
+      // Se não for admin, verificar na tabela de partners
+      const [partnerRows] = await pool.execute(
+        'SELECT * FROM partners WHERE email = ?',
+        [email]
+      );
+
+      if (partnerRows.length > 0) {
+        user = partnerRows[0];
+        role = 'partner';
+      }
+    }
+
+    // Se o usuário não for encontrado em nenhuma tabela
+    if (!user) {
       return res.status(404).json({ message: 'Email não encontrado.' });
     }
 
-    const user = rows[0];
-
     // Verificar se o usuário ainda não tem senha cadastrada
     if (!user.password) {
-      // Criptografar a senha fornecida
-      const hashedPassword = await bcrypt.hash(password, 100);
+      const hashedPassword = await bcrypt.hash(password, 10);
 
-      // Atualizar o banco com a senha criptografada
+      // Atualizar a senha no banco
+      const table = role === 'admin' ? 'admins' : 'partners';
       await pool.execute(
-        'UPDATE users SET password = ? WHERE email = ?',
+        `UPDATE ${table} SET password = ? WHERE email = ?`,
         [hashedPassword, email]
       );
 
-      return res.json({ message: 'Senha criada com sucesso! Login bem-sucedido.', user: { email: user.email } });
+      return res.json({
+        message: 'Senha criada com sucesso! Login bem-sucedido.',
+        user: { email: user.email, role },
+      });
     }
 
-    // Verificar se a senha fornecida corresponde à senha armazenada
+    // Comparar a senha fornecida com a senha armazenada
     const isPasswordValid = await bcrypt.compare(password, user.password);
 
     if (!isPasswordValid) {
       return res.status(401).json({ message: 'Senha incorreta.' });
     }
 
+    // Gerar token JWT
+    const token = jwt.sign(
+      { userId: user.id, email: user.email, role },
+      process.env.JWT_SECRET,
+      { expiresIn: '1h' }
+    );
+
     // Login bem-sucedido
-    res.json({ message: 'Login bem-sucedido!', user: { email: user.email } });
+    res.json({
+      message: 'Login bem-sucedido!',
+      token,
+      user: { email: user.email, role },
+    });
   } catch (error) {
     console.error('Erro ao processar o login:', error);
     res.status(500).json({ message: 'Erro interno no servidor.' });

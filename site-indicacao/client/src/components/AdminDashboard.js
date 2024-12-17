@@ -4,9 +4,8 @@ import axios from 'axios';
 const AdminDashboard = ({ newIndications = [] }) => {
   const [indications, setIndications] = useState([]);
   const [statusMap, setStatusMap] = useState({});
-  const [tempStatusMap, setTempStatusMap] = useState({});
   const [adminObservations, setAdminObservations] = useState({});
-
+  
   const [filterName, setFilterName] = useState('');
   const [filterEmail, setFilterEmail] = useState('');
 
@@ -22,29 +21,18 @@ const AdminDashboard = ({ newIndications = [] }) => {
         }, {});
         setStatusMap(initialStatusMap);
       } catch (error) {
-        console.error("Erro ao carregar indicações:", error);
+        console.error('Erro ao carregar indicações:', error);
       }
     };
 
     fetchIndications();
   }, []);
 
-  const handleTempStatusChange = (id, newStatus) => {
-    setTempStatusMap((prevTempStatusMap) => ({ ...prevTempStatusMap, [id]: newStatus }));
-  };
-
-  const handleAdminObservationChange = (id, observation) => {
-    setAdminObservations((prevObservations) => ({ ...prevObservations, [id]: observation }));
-  };
-
-  const handleStatusChange = async (id) => {
-    const newStatus = tempStatusMap[id] || statusMap[id];
-    const newObservation = adminObservations[id] || '';
-
+  const handleStatusChange = async (id, newStatus, observation) => {
     setStatusMap((prevStatusMap) => ({ ...prevStatusMap, [id]: newStatus }));
     setIndications((prevIndications) =>
       prevIndications.map((indication) =>
-        indication.id === id ? { ...indication, status: newStatus, adminObservation: newObservation } : indication
+        indication.id === id ? { ...indication, status: newStatus, adminObservation: observation } : indication
       )
     );
 
@@ -52,12 +40,12 @@ const AdminDashboard = ({ newIndications = [] }) => {
       // Atualizar o status e observação no backend
       await axios.put(`http://localhost:5000/api/indications/${id}`, {
         status: newStatus,
-        adminObservation: newObservation,
+        adminObservation: observation,
       });
 
-      alert(`Status do cliente ${id} alterado para "${newStatus}" com observação: "${newObservation}"`);
+      alert(`Status do cliente ${id} alterado para "${newStatus}" com observação: "${observation}"`);
     } catch (error) {
-      console.error("Erro ao atualizar status:", error);
+      console.error('Erro ao atualizar status:', error);
     }
   };
 
@@ -115,7 +103,7 @@ const AdminDashboard = ({ newIndications = [] }) => {
             </tr>
           </thead>
           <tbody>
-            {filteredIndications.map(indication => (
+            {filteredIndications.map((indication) => (
               <tr key={indication.id}>
                 <td>
                   {indication.indicated.name}<br />
@@ -133,19 +121,19 @@ const AdminDashboard = ({ newIndications = [] }) => {
                   <textarea
                     placeholder="Observação do Admin"
                     value={adminObservations[indication.id] || ''}
-                    onChange={(e) => handleAdminObservationChange(indication.id, e.target.value)}
+                    onChange={(e) => setAdminObservations({ ...adminObservations, [indication.id]: e.target.value })}
                   />
                 </td>
                 <td>
                   <select
-                    value={tempStatusMap[indication.id] || statusMap[indication.id]}
-                    onChange={(e) => handleTempStatusChange(indication.id, e.target.value)}
+                    value={statusMap[indication.id] || 'Fechado'}
+                    onChange={(e) => handleStatusChange(indication.id, e.target.value, adminObservations[indication.id])}
                   >
                     <option value="Fechado">Fechado</option>
                     <option value="Negociação">Negociação</option>
                     <option value="Negado">Negado</option>
                   </select>
-                  <button onClick={() => handleStatusChange(indication.id)}>
+                  <button onClick={() => handleStatusChange(indication.id, statusMap[indication.id], adminObservations[indication.id])}>
                     Atualizar Status
                   </button>
                 </td>
