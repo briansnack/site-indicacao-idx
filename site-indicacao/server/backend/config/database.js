@@ -1,12 +1,13 @@
 const mysql = require('mysql2');
-require('dotenv').config();
+require('dotenv').config();  // Carrega variáveis de ambiente
 
+// Criação do pool de conexões com o MySQL
 const pool = mysql.createPool({
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
-  port: process.env.DB_PORT
+  password: process.env.DB_PASSWORD,
+  port: process.env.DB_PORT,
 });
 
-module.exports = pool.promise();  // Usando pool de promessas com mysql2
+module.exports = pool.promise();

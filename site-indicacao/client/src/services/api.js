@@ -2,7 +2,7 @@ import axios from 'axios';
 
 // Configuração da base URL da API
 const api = axios.create({
-  baseURL: process.env.REACT_APP_API_BASE_URL || 'https://sua-api.com/api/',  // Use variável de ambiente para baseURL
+  baseURL: process.env.REACT_APP_API_BASE_URL || 'http://localhost:5000/api', // URL de base
   timeout: 5000, // Timeout para requisições
 });
 

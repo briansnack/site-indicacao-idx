@@ -1,4 +1,3 @@
-// server/backend/controllers/indicationsController.js
 const { Indication } = require('../models/Indication');
 
 const createIndication = async (req, res) => {

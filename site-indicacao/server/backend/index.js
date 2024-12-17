@@ -1,4 +1,3 @@
-// server/backend/index.js
 const express = require('express');
 const pool = require('./config/database'); // Importa o pool de conexões com o banco
 require('dotenv').config(); // Carrega variáveis de ambiente do arquivo .env

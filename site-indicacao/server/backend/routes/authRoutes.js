@@ -1,4 +1,3 @@
-// server/backend/routes/authRoutes.js
 const express = require('express');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
@@ -38,23 +37,6 @@ router.post('/login', async (req, res) => {
     // Se o usuário não for encontrado em nenhuma tabela
     if (!user) {
       return res.status(404).json({ message: 'Email não encontrado.' });
-    }
-
-    // Verificar se o usuário ainda não tem senha cadastrada
-    if (!user.password) {
-      const hashedPassword = await bcrypt.hash(password, 10);
-
-      // Atualizar a senha no banco
-      const table = role === 'admin' ? 'admins' : 'partners';
-      await pool.execute(
-        `UPDATE ${table} SET password = ? WHERE email = ?`,
-        [hashedPassword, email]
-      );
-
-      return res.json({
-        message: 'Senha criada com sucesso! Login bem-sucedido.',
-        user: { email: user.email, role },
-      });
     }
 
     // Comparar a senha fornecida com a senha armazenada

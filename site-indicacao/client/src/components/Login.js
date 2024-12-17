@@ -1,3 +1,4 @@
+// frontend/src/Login.js
 import React, { useState } from 'react';
 import { login } from './api';  // Importe a função de login do arquivo api.js
 
@@ -18,7 +19,7 @@ const Login = ({ setIsAuthenticated, setUserType, setToken }) => {
 
       // Configura o estado de autenticação e o tipo de usuário
       setIsAuthenticated(true);
-      setUserType(response.userType);
+      setUserType(response.user.role);
       setToken(response.token);
 
       // Redirecionar ou dar um feedback ao usuário (opcional)
