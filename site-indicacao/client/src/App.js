@@ -46,17 +46,6 @@ function App() {
       <footer className="footer">
         © 2024 IDX Company. Todos os direitos reservados.
       </footer>
-
-      <button className="toggle-theme" onClick={toggleDarkMode}>
-        <img
-          src={
-            darkMode
-              ? 'https://cdn-icons-png.flaticon.com/512/414/414891.png' // Ícone para tema escuro
-              : 'https://cdn-icons-png.flaticon.com/128/5311/5311069.png' // Ícone para tema claro
-          }
-          alt="Alternar Tema" // Texto alternativo para o ícone
-        />
-      </button>
     </div>
   );
 }

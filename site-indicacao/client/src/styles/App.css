@@ -6,21 +6,17 @@ body, html {
   height: 100%;
   font-family: Arial, sans-serif;
 }
-/* Estilo para os campos de Login */
-.login-container input[type="email"], 
-.login-container input[type="password"] {
-  width: 25%; /* Largura menor para os campos */
+
+/* Estilo para o modo escuro na tela de login */
+.dark-mode .login-container input[type="email"], 
+.dark-mode .login-container input[type="password"] {
+  width: 25%; 
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 4px;
   font-size: 16px;
   box-sizing: border-box;
-  margin-bottom: 12px; /* Espaçamento entre os campos */
-}
-
-/* Estilo para o modo escuro na tela de login */
-.dark-mode .login-container input[type="email"], 
-.dark-mode .login-container input[type="password"] {
+  margin-bottom: 12px;
   background-color: #333;
   color: #e0e0e0;
   border: 1px solid #444;
@@ -29,19 +25,10 @@ body, html {
  /* Estilos para a Tabela de Indicações no Modo Escuro */
 .dark-mode .admin-indications-table th,
 .dark-mode .admin-indications-table td {
-  color: #ffffff !important; /* Texto branco nas células da tabela no modo escuro */
-  border: 1px solid #444444; /* Borda escura para contraste */
-  padding: 12px; /* Padding para facilitar a leitura */
-  background-color: #1e1e1e; /* Fundo escuro para as células */
-}
-
-/* Estilos para a Tabela de Indicações no Modo Claro */
-.light-mode .admin-indications-table th,
-.light-mode .admin-indications-table td {
-  color: #121212 !important; /* Texto escuro nas células da tabela no modo claro */
-  border: 1px solid #ccc; /* Borda clara para contraste */
-  padding: 12px; /* Padding para facilitar a leitura */
-  background-color: #f5f5f5; /* Fundo claro para as células */
+  color: #ffffff !important; 
+  border: 1px solid #444444; 
+  padding: 12px; 
+  background-color: #1e1e1e; 
 }
 
 /* Caixa de texto de observação para status */
@@ -52,7 +39,7 @@ body, html {
   border: 1px solid #ccc;
   border-radius: 4px;
   font-size: 14px;
-  resize: vertical; /* Permite redimensionar verticalmente */
+  resize: vertical; 
 }
 
 .dark-mode .admin-indications-table textarea {
@@ -61,75 +48,47 @@ body, html {
   border: 1px solid #444;
 }
 
-/* Estilos para o modo claro */
-.light-mode {
-  background-color: #ffffff;
-  color: #121212;
-}
-
-/* Footer no modo claro */
-.light-mode .footer {
-  background-color: #f0f0f0;
-  color: #121212;
-  height: 32px; 
-  font-size: 14px; 
-  display: flex; 
-  align-items: center; 
-  justify-content: center; 
-  padding: 0 10px; 
-}
-
-/* Botão de alternância de tema no modo claro */
-.light-mode .toggle-theme {
-  background-color: transparent;
-  color: #121212;
-}
-
-.light-mode .toggle-theme img {
-  filter: invert(0); 
-}
-
 /* Container geral dos campos */
 .new-indication {
   display: block;
-  flex-wrap: wrap; /* Permite que os campos se ajustem para a próxima linha, se necessário */
-  gap: 10px; /* Espaçamento entre os campos */
-  justify-content: flex-start; /* Alinha os campos à esquerda */
-  margin-bottom: 20px; /* Espaço entre os campos e a área de observações */
+  flex-wrap: wrap; 
+  gap: 10px;
+  justify-content: flex-start; 
+  margin-bottom: 20px; 
 }
 
 /* Estilo para os campos de Email, Nome e Telefone */
 .new-indication input[type="text"], 
 .new-indication input[type="email"], 
 .new-indication input[type="tel"] {
-  width: 25%; /* Largura menor para os campos */
+  width: 25%; 
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 4px;
   font-size: 16px;
   box-sizing: border-box;
-  margin-bottom: 12px; /* Espaçamento entre os campos */
+  margin-bottom: 12px; 
 }
 
 /* Estilo para o campo de observações */
 .new-indication textarea {
-  width: 60%; /* Ocupa toda a largura disponível */
+  width: 60%;
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 4px;
   font-size: 16px;
   box-sizing: border-box;
-  resize: vertical; /* Permite redimensionar verticalmente */
-  margin-top: 10px; /* Espaçamento superior entre os campos */
-  height: 60px; /* Tamanho inicial */
-  transition: all 0.3s ease; /* Animação suave ao expandir */
+  resize: vertical; 
+  margin-top: 10px; 
+  height: 60px; 
+  transition: all 0.3s ease; 
 }
 
 /* Expansão do campo de observações ao clicar */
 .new-indication textarea:focus {
-  height: 120px; /* Aumenta a altura ao clicar */
-  border-color: #007bff; /* Borda de destaque ao clicar */
-  outline: none; /* Remove contorno padrão do navegador */
+  height: 120px; 
+  border-color: #007bff; 
+  outline: none; 
 }
 
 /* Estilo para o modo escuro */
@@ -148,7 +107,7 @@ body, html {
 }
 
 .dark-mode .new-indication textarea:focus {
-  border-color: #5bc0de; /* Borda de destaque no modo escuro */
+  border-color: #5bc0de; 
 }
 
 /* Footer no modo escuro */
@@ -165,105 +124,37 @@ body, html {
 
 /* Estilos para o modo escuro */
 .dark-mode {
-  background-color: #121212; /* Fundo escuro para o corpo */
-  color: #e0e0e0; /* Texto claro para contraste */
+  background-color: #121212; 
+  color: #e0e0e0;
 }
 
 /* Modificar cor de fundo e texto de tabelas e células */
 .dark-mode table {
-  background-color: #1e1e1e;  /* Fundo mais escuro para a tabela */
-  color: #ffffff;  /* Texto branco para contraste */
+  background-color: #1e1e1e;  
+  color: #ffffff;  
   border-collapse: collapse;
 }
 
 .dark-mode th, .dark-mode td {
-  border: 1px solid #444444;  /* Borda visível escura para contraste */
-  padding: 12px; /* Aumentando o padding para facilitar o clique */
+  border: 1px solid #444444;  
+  padding: 12px; 
   text-align: left;
 }
 
-/* Tabela no modo claro */
-.light-mode th, .light-mode td {
-  border: 1px solid #444444;  /* Borda visível escura para contraste */
-  padding: 12px; /* Aumentando o padding para facilitar o clique */
-  text-align: left;
-}
 
 .dark-mode th {
-  background-color: #000000;  /* Fundo escuro para cabeçalho */
+  background-color: #000000;  
 }
 
 .dark-mode td {
-  background-color: #000000;  /* Fundo escuro nas células */
-  color: #ffffff; /* Texto claro nas células */
+  background-color: #000000;  
+  color: #ffffff; 
 }
 
 .dark-mode tr:hover {
-  background-color: #000000; /* Destacar linha ao passar o mouse */
+  background-color: #000000; 
 }
 
-/* Estilos para o botão de alternância de tema */
-.dark-mode .toggle-theme {
-  background-color: transparent;
-  color: #e0e0e0;
-  border: none;
-  margin-bottom: 15px;
-}
-
-.dark-mode .toggle-theme img {
-  filter: invert(1);
-}
-
-.light-mode .toggle-theme {
-  background-color: transparent;
-  color: #000000;
-  border: none;
-  margin-bottom: 15px;
-}
-
-/* Ajustes para garantir boa leitura em texto */
-.dark-mode, .dark-mode .user-dashboard, .dark-mode .user-dashboard-content, .dark-mode .new-indication, .dark-mode .services-section {
-  color: #ffffff; /* Texto branco nas seções do modo escuro */
-}
-
-/* Botão de alternância de tema */
-.toggle-theme {
-  position: fixed;
-  bottom: 20px;
-  left: 20px;
-  background: none !important;
-  border: none;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 50px;
-  height: 50px;
-  padding: 0;
-  z-index: 1000;
-}
-
-.toggle-theme img {
-  width: 40px;
-  height: 40px;
-  display: block;
-}
-
-/* Efeito ao passar o mouse sobre o botão de alternância */
-.toggle-theme:hover {
-  transform: scale(1.1);
-  opacity: 0.8;
-}
-
-/* Ícones específicos para cada tema */
-.light-mode .toggle-theme img {
-  content: url('https://cdn-icons-png.flaticon.com/512/414/414891.png');
-}
-
-.dark-mode .toggle-theme img {
-  content: url('https://cdn-icons-png.flaticon.com/128/5311/5311069.png');
-}
 
 /* Estilos globais e básicos */
 .App {
@@ -294,8 +185,8 @@ body, html {
 }
 
 .indicated-clients {
-  justify-content: center; /* Centraliza horizontalmente */
-  align-items: center; /* Centraliza verticalmente */
+  justify-content: center; 
+  align-items: center;
   flex-direction: column;
   width: 60%;
   margin-right: 20px;
@@ -304,21 +195,11 @@ body, html {
 /* Estilos para a Tabela de Indicações no Modo Escuro */
 .dark-mode .indicated-clients th, 
 .dark-mode .indicated-clients td {
-  color: #ffffff !important; /* Texto completamente branco nas células da tabela no modo escuro */
-  border: 1px solid #444444; /* Borda escura para manter o contraste */
-  padding: 12px; /* Aumentando o padding para facilitar o clique */
-  text-align: left; /* Alinhamento do texto à esquerda */
-  background-color: #1e1e1e; /* Fundo escuro para as células */
-}
-
-/* Estilos para a Tabela de Indicações no Modo Claro */
-.light-mode .indicated-clients th, 
-.light-mode .indicated-clients td {
-  color: #121212 !important; /* Texto escuro nas células da tabela no modo claro */
-  border: 1px solid #ccc; /* Borda clara para manter o contraste */
-  padding: 12px; /* Aumentando o padding para facilitar o clique */
-  text-align: left; /* Alinhamento do texto à esquerda */
-  background-color: #f5f5f5; /* Fundo claro para as células */
+  color: #ffffff !important; 
+  border: 1px solid #444444; 
+  padding: 12px;
+  text-align: left;
+  background-color: #1e1e1e; 
 }
 
 .services-section {
@@ -336,7 +217,7 @@ th, td {
   border: 1px solid #ccc;
   padding: 12px;
   text-align: left;
-  color: #121212; /* Texto escuro nas tabelas no modo claro */
+  color: #121212; 
 }
 
 select, button {
@@ -378,7 +259,7 @@ button[type="submit"]:hover {
   border: 1px solid #ddd;
   padding: 12px;
   text-align: left;
-  color: #121212; /* Texto escuro nas células da tabela no modo claro */
+  color: #121212; 
 }
 
 /* Estilos para a Tabela de Serviços no Modo Escuro */
@@ -386,7 +267,7 @@ button[type="submit"]:hover {
   border: 1px solid #444444;
   padding: 12px;
   text-align: left;
-  color: #b0b0b0; /* Texto cinza mais escuro nas células da tabela no modo escuro */
+  color: #b0b0b0; 
 }
 
 .services-table button {

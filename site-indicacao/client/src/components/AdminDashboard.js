@@ -59,8 +59,8 @@ const AdminDashboard = ({ newIndications = [] }) => {
   };
 
   const filteredIndications = indications.filter((indication) =>
-    indication.referrer.name.toLowerCase().includes(filterName.toLowerCase()) &&
-    indication.referrer.email.toLowerCase().includes(filterEmail.toLowerCase())
+    indication.referrerName && indication.referrerName.toLowerCase().includes(filterName.toLowerCase()) &&
+    indication.referrerEmail && indication.referrerEmail.toLowerCase().includes(filterEmail.toLowerCase())
   );
 
   return (
@@ -106,13 +106,13 @@ const AdminDashboard = ({ newIndications = [] }) => {
             {filteredIndications.map((indication) => (
               <tr key={indication.id}>
                 <td>
-                  {indication.indicated.name}<br />
-                  {indication.indicated.phone}<br />
-                  {indication.indicated.email}
+                  {indication.indicatedName}<br />
+                  {indication.indicatedPhone}<br />
+                  {indication.indicatedEmail}
                 </td>
                 <td>
-                  {indication.referrer.name}<br />
-                  {indication.referrer.email}
+                  {indication.referrerName}<br />
+                  {indication.referrerEmail}
                 </td>
                 <td>{indication.service}</td>
                 <td>{statusMap[indication.id]}</td>

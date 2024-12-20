@@ -1,17 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-
-const services = [
-  { category: "SISTEMAS", name: "Serviço Sistema 1" },
-  { category: "SISTEMAS", name: "Serviço Sistema 2" },
-  { category: "SISTEMAS", name: "Serviço Sistema 3" },
-  { category: "MARKETING", name: "Serviço Marketing 1" },
-  { category: "MARKETING", name: "Serviço Marketing 2" },
-  { category: "MARKETING", name: "Serviço Marketing 3" },
-  { category: "CERTIFICADO DIGITAL", name: "Serviço Certificado Digital 1" },
-  { category: "CERTIFICADO DIGITAL", name: "Serviço Certificado Digital 2" },
-  { category: "CERTIFICADO DIGITAL", name: "Serviço Certificado Digital 3" }
-];
+import { getIndications, createIndication } from '../services/api';  // Corrigindo a importação da API
 
 const UserDashboard = ({ userId }) => {
   const [newClient, setNewClient] = useState({ name: '', phone: '', email: '' });
@@ -21,12 +9,22 @@ const UserDashboard = ({ userId }) => {
   const [indications, setIndications] = useState([]);
   const [observations, setObservations] = useState('');
 
-  // Fetch indications from backend
+  // Mock de serviços
+  const services = [
+    { category: 'SISTEMAS', name: 'Sistema de Gestão de Frota' },
+    { category: 'SISTEMAS', name: 'Sistema de Monitoramento Agrícola' },
+    { category: 'MARKETING', name: 'Consultoria em Marketing Digital' },
+    { category: 'MARKETING', name: 'Gestão de Redes Sociais' },
+    { category: 'CERTIFICADO DIGITAL', name: 'Certificado Digital A1' },
+    { category: 'CERTIFICADO DIGITAL', name: 'Certificado Digital A3' }
+  ];
+
+  // Fetch indications from backend or mock
   useEffect(() => {
     const fetchIndications = async () => {
       try {
-        const response = await axios.get(`/api/indications/user/${userId}`);
-        setIndications(response.data);
+        const response = await getIndications(userId);  // Alterado para utilizar a função de obter indicações
+        setIndications(response);
       } catch (error) {
         console.error("Error fetching indications:", error);
       }
@@ -67,7 +65,7 @@ const UserDashboard = ({ userId }) => {
         alert('Por favor, selecione pelo menos um serviço.');
         return;
       }
-
+  
       const newIndication = {
         client: newClient.name,
         phone: newClient.phone,
@@ -77,16 +75,18 @@ const UserDashboard = ({ userId }) => {
         status: "Pendente",
         userId: userId
       };
-
+  
+      console.log("Dados enviados:", newIndication); // Log dos dados
+  
       try {
-        await axios.post('/api/indications', newIndication);
+        await createIndication(newIndication); // Alterado para utilizar a função de criar indicação
         alert(`Cliente indicado com sucesso! 
         Nome: ${newClient.name}
         Telefone: ${newClient.phone}
         Email: ${newClient.email}
         Serviços: ${Object.values(selectedServices).flat().join(', ')}
         Observações: ${observations}`);
-
+  
         setNewClient({ name: '', phone: '', email: '' });
         setSelectedServices({});
         setObservations('');
@@ -103,12 +103,9 @@ const UserDashboard = ({ userId }) => {
   return (
     <div className="user-dashboard">
       <h2>Bem-vindo, parceiro indicador!</h2>
-
-      <div className="user-dashboard-header">
-        <button onClick={() => setViewingStatus(!viewingStatus)}>
-          {viewingStatus ? "Indicar Novo Cliente" : "Ver Status das Indicações"}
-        </button>
-      </div>
+      <button onClick={() => setViewingStatus(!viewingStatus)}>
+        {viewingStatus ? "Indicar Novo Cliente" : "Ver Status das Indicações"}
+      </button>
 
       {viewingStatus ? (
         <div className="indicated-clients">
@@ -128,11 +125,7 @@ const UserDashboard = ({ userId }) => {
                 <tr key={indication.id}>
                   <td>{indication.client}</td>
                   <td>{indication.status}</td>
-                  <td>
-                    {Object.values(indication.services)
-                      .flat()
-                      .join(', ')}
-                  </td>
+                  <td>{Object.values(indication.services).flat().join(', ')}</td>
                   <td>{indication.observations}</td>
                   <td>{indication.adminObservation || 'Nenhuma observação'}</td>
                 </tr>
@@ -207,8 +200,7 @@ const UserDashboard = ({ userId }) => {
                           <td>
                             <button
                               onClick={() => handleServiceSelection(category, service.name)}
-                              className={selectedServices[category]?.includes(service.name) ? 'selected' : ''}
-                            >
+                              className={selectedServices[category]?.includes(service.name) ? 'selected' : ''}>
                               {selectedServices[category]?.includes(service.name) ? 'Selecionado' : 'Selecionar'}
                             </button>
                           </td>
@@ -218,9 +210,9 @@ const UserDashboard = ({ userId }) => {
                 ))}
               </tbody>
             </table>
-
-            <button onClick={handleSubmit}>Enviar Indicações</button>
           </div>
+
+          <button onClick={handleSubmit}>Enviar Indicação</button>
         </div>
       )}
     </div>

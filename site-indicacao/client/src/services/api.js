@@ -6,7 +6,50 @@ const api = axios.create({
   timeout: 5000, // Timeout para requisições
 });
 
-// Função para login
+// Mock para testar sem o backend
+if (process.env.NODE_ENV === 'development') {
+  api.post = async (url, data) => {
+    if (url === '/indications') {
+      // Simulando uma resposta bem-sucedida para criar indicação
+      return { data: { message: 'Indicação criada com sucesso' } };
+    }
+    if (url === '/login') {
+      // Simulando uma resposta de login bem-sucedido
+      return { data: { token: 'mock-token' } };
+    }
+    throw new Error('Erro ao enviar dados');
+  };
+
+  api.get = async (url) => {
+    if (url.startsWith('/indications/user/')) {
+      // Simulando a resposta de indicações para um usuário específico
+      const userId = url.split('/').pop();
+      return {
+        data: [
+          { id: 1, client: 'Cliente 1', status: 'Pendente', services: ['Serviço 1'], observations: 'Observação 1', userId },
+          { id: 2, client: 'Cliente 2', status: 'Fechado', services: ['Serviço 2'], observations: 'Observação 2', userId }
+        ]
+      };
+    }
+    if (url.startsWith('/indications/')) {
+      // Simulando o status de uma indicação específica
+      const id = url.split('/').pop();
+      return {
+        data: { id, status: 'Pendente', client: 'Cliente ' + id, services: ['Serviço mock'], observations: 'Observação mock' }
+      };
+    }
+    throw new Error('Erro ao obter dados');
+  };
+
+  api.put = async (url, data) => {
+    if (url.startsWith('/indications/')) {
+      // Simulando a atualização do status da indicação
+      return { data: { message: 'Status atualizado com sucesso' } };
+    }
+    throw new Error('Erro ao atualizar dados');
+  };
+}
+
 export const login = async (email, password) => {
   try {
     const response = await api.post('/login', { email, password });
@@ -17,9 +60,10 @@ export const login = async (email, password) => {
   }
 };
 
-export const getIndications = async () => {
+// Função para obter as indicações de um parceiro específico (usuário)
+export const getIndications = async (userId) => {
   try {
-    const response = await api.get('/indications');
+    const response = await api.get(`/indications/user/${userId}`);
     return response.data;
   } catch (error) {
     console.error("Erro ao obter indicações:", error.response ? error.response.data : error.message);
@@ -27,9 +71,10 @@ export const getIndications = async () => {
   }
 };
 
-export const updateIndicationStatus = async (id, status) => {
+// Função para atualizar o status de uma indicação
+export const updateIndicationStatus = async (id, status, adminObservation) => {
   try {
-    const response = await api.put(`/indications/${id}`, { status });
+    const response = await api.put(`/indications/${id}`, { status, adminObservation });
     return response.data;
   } catch (error) {
     console.error("Erro ao atualizar o status da indicação:", error.response ? error.response.data : error.message);
