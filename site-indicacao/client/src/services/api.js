@@ -14,8 +14,18 @@ if (process.env.NODE_ENV === 'development') {
       return { data: { message: 'Indicação criada com sucesso' } };
     }
     if (url === '/login') {
-      // Simulando uma resposta de login bem-sucedido
-      return { data: { token: 'mock-token' } };
+      const { email, password } = data;
+
+      // Simulando a verificação do e-mail e senha
+      if (email === 'admin@site.com' && password === '123456') {
+        // Retorno para o tipo de usuário admin
+        return { data: { token: 'mock-token', user: { role: 'admin' } } };
+      } else if (email === 'parceiro1@site.com' && password === '123456') {
+        // Retorno para o tipo de usuário comum
+        return { data: { token: 'mock-token', user: { role: 'user' } } };
+      } else {
+        throw new Error('Usuário ou senha inválidos');
+      }
     }
     throw new Error('Erro ao enviar dados');
   };
@@ -50,6 +60,7 @@ if (process.env.NODE_ENV === 'development') {
   };
 }
 
+// Função para login
 export const login = async (email, password) => {
   try {
     const response = await api.post('/login', { email, password });

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getIndications, createIndication } from '../services/api';  // Corrigindo a importação da API
+import { getIndications, createIndication } from '../services/api';  
 
 const UserDashboard = ({ userId }) => {
   const [newClient, setNewClient] = useState({ name: '', phone: '', email: '' });
@@ -23,7 +23,7 @@ const UserDashboard = ({ userId }) => {
   useEffect(() => {
     const fetchIndications = async () => {
       try {
-        const response = await getIndications(userId);  // Alterado para utilizar a função de obter indicações
+        const response = await getIndications(userId);  
         setIndications(response);
       } catch (error) {
         console.error("Error fetching indications:", error);
@@ -76,10 +76,10 @@ const UserDashboard = ({ userId }) => {
         userId: userId
       };
   
-      console.log("Dados enviados:", newIndication); // Log dos dados
+      console.log("Dados enviados:", newIndication); 
   
       try {
-        await createIndication(newIndication); // Alterado para utilizar a função de criar indicação
+        await createIndication(newIndication);
         alert(`Cliente indicado com sucesso! 
         Nome: ${newClient.name}
         Telefone: ${newClient.phone}

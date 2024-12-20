@@ -1,70 +1,49 @@
 const express = require('express');
 const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
-const pool = require('../config/database');
+const pool = require('../config/database'); // Conexão com o MySQL
 const router = express.Router();
 
-// Rota GET para depuração
-router.get('/login', (req, res) => {
-  res.status(200).json({ message: 'Endpoint funcionando, use POST para autenticar.' });
-});
+// Rota POST para criar um novo admin ou parceiro (com senha criptografada)
+router.post('/register', async (req, res) => {
+  const { name, email, password, role } = req.body; // Recebe dados do formulário
 
-// Rota POST para autenticação
-router.post('/login', async (req, res) => {
-  const { email, password } = req.body;
-  console.log("Dados recebidos:", { email, password });
+  // Verifica se a senha foi informada
+  if (!password || !email || !name || !role) {
+    return res.status(400).json({ message: 'Todos os campos são obrigatórios!' });
+  }
 
   try {
-    let user = null;
-    let role = null;
-
-    const [adminRows] = await pool.execute(
+    // Verificar se já existe um usuário com esse e-mail
+    const [existingUser] = await pool.execute(
       'SELECT * FROM admins WHERE email = ?',
       [email]
     );
-    console.log("adminRows:", adminRows);
 
-    if (adminRows.length > 0) {
-      user = adminRows[0];
-      role = 'admin';
-    } else {
-      const [partnerRows] = await pool.execute(
-        'SELECT * FROM partners WHERE email = ?',
-        [email]
+    if (existingUser.length > 0) {
+      return res.status(400).json({ message: 'Email já está registrado.' });
+    }
+
+    // Criptografar a senha usando bcrypt
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Inserir o novo admin ou parceiro no banco de dados
+    if (role === 'admin') {
+      await pool.execute(
+        'INSERT INTO admins (name, email, password) VALUES (?, ?, ?)',
+        [name, email, hashedPassword]
       );
-      console.log("partnerRows:", partnerRows);
-
-      if (partnerRows.length > 0) {
-        user = partnerRows[0];
-        role = 'partner';
-      }
+    } else if (role === 'partner') {
+      await pool.execute(
+        'INSERT INTO partners (name, email, password) VALUES (?, ?, ?)',
+        [name, email, hashedPassword]
+      );
     }
 
-    if (!user) {
-      return res.status(404).json({ message: 'Email não encontrado.' });
-    }
+    res.status(201).json({ message: 'Usuário criado com sucesso!' });
 
-    const isPasswordValid = await bcrypt.compare(password, user.password);
-    console.log("isPasswordValid:", isPasswordValid);
-
-    if (!isPasswordValid) {
-      return res.status(401).json({ message: 'Senha incorreta.' });
-    }
-
-    const token = jwt.sign(
-      { userId: user.id, email: user.email, role },
-      process.env.JWT_SECRET,
-      { expiresIn: '1h' }
-    );
-
-    res.json({
-      message: 'Login bem-sucedido!',
-      token,
-      user: { email: user.email, role },
-    });
   } catch (error) {
-    console.error('Erro ao processar o login:', error);
-    res.status(500).json({ message: 'Erro interno no servidor.', details: error });
+    console.error('Erro ao criar usuário:', error);
+    res.status(500).json({ message: 'Erro interno no servidor.' });
   }
 });
 

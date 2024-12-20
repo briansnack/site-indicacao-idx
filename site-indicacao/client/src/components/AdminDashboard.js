@@ -1,91 +1,104 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+
+// Lista inicial de indicações para demonstração
+const initialAdminIndications = [
+  {
+    id: 1,
+    client: "Cliente 1",
+    service: "Serviço 1",
+    status: "Fechado",
+    indicated: { name: "Indicado 1", phone: "123456789", email: "indicado1@example.com" },
+    referrer: { name: "Parceiro 1", email: "parceiro1@example.com" },
+    observations: "Observação inicial 1"
+  },
+  {
+    id: 2,
+    client: "Cliente 2",
+    service: "Serviço 2",
+    status: "Negociação",
+    indicated: { name: "Indicado 2", phone: "987654321", email: "indicado2@example.com" },
+    referrer: { name: "Parceiro 2", email: "parceiro2@example.com" },
+    observations: "Observação inicial 2"
+  },
+  {
+    id: 3,
+    client: "Cliente 3",
+    service: "Serviço 3",
+    status: "Negado",
+    indicated: { name: "Indicado 3", phone: "1122334455", email: "indicado3@example.com" },
+    referrer: { name: "Parceiro 3", email: "parceiro3@example.com" },
+    observations: "Observação inicial 3"
+  }
+];
 
 const AdminDashboard = ({ newIndications = [] }) => {
-  const [indications, setIndications] = useState([]);
-  const [statusMap, setStatusMap] = useState({});
+  const [indications, setIndications] = useState([...initialAdminIndications, ...newIndications]);
+  const [statusMap, setStatusMap] = useState(
+    indications.reduce((acc, ind) => {
+      acc[ind.id] = ind.status;
+      return acc;
+    }, {})
+  );
+  const [tempStatusMap, setTempStatusMap] = useState({});
   const [adminObservations, setAdminObservations] = useState({});
-  
-  const [filterName, setFilterName] = useState('');
-  const [filterEmail, setFilterEmail] = useState('');
+
+  const [filterQuery, setFilterQuery] = useState('');
 
   useEffect(() => {
-    // Buscar indicações do backend ao carregar o componente
-    const fetchIndications = async () => {
-      try {
-        const response = await axios.get('http://localhost:5000/api/indications');
-        setIndications(response.data);
-        const initialStatusMap = response.data.reduce((acc, ind) => {
-          acc[ind.id] = ind.status;
-          return acc;
-        }, {});
-        setStatusMap(initialStatusMap);
-      } catch (error) {
-        console.error('Erro ao carregar indicações:', error);
-      }
-    };
+    setIndications([...initialAdminIndications, ...newIndications]);
+  }, [newIndications]);
 
-    fetchIndications();
-  }, []);
+  const handleTempStatusChange = (id, newStatus) => {
+    setTempStatusMap((prevTempStatusMap) => ({ ...prevTempStatusMap, [id]: newStatus }));
+  };
 
-  const handleStatusChange = async (id, newStatus, observation) => {
+  const handleAdminObservationChange = (id, observation) => {
+    setAdminObservations((prevObservations) => ({ ...prevObservations, [id]: observation }));
+  };
+
+  const handleStatusChange = (id) => {
+    const newStatus = tempStatusMap[id] || statusMap[id];
+    const newObservation = adminObservations[id] || '';
+
     setStatusMap((prevStatusMap) => ({ ...prevStatusMap, [id]: newStatus }));
     setIndications((prevIndications) =>
       prevIndications.map((indication) =>
-        indication.id === id ? { ...indication, status: newStatus, adminObservation: observation } : indication
+        indication.id === id ? { ...indication, status: newStatus, adminObservation: newObservation } : indication
       )
     );
-
-    try {
-      // Atualizar o status e observação no backend
-      await axios.put(`http://localhost:5000/api/indications/${id}`, {
-        status: newStatus,
-        adminObservation: observation,
-      });
-
-      alert(`Status do cliente ${id} alterado para "${newStatus}" com observação: "${observation}"`);
-    } catch (error) {
-      console.error('Erro ao atualizar status:', error);
-    }
+    alert(`Status do cliente ${id} alterado para "${newStatus}" com observação: "${newObservation}"`);
   };
 
-  const handleFilterChange = (e, type) => {
-    const value = e.target.value;
-    if (type === 'name') {
-      setFilterName(value);
-    } else {
-      setFilterEmail(value);
-    }
+  const handleFilterChange = (e) => {
+    setFilterQuery(e.target.value.toLowerCase());
   };
 
-  const filteredIndications = indications.filter((indication) =>
-    indication.referrerName && indication.referrerName.toLowerCase().includes(filterName.toLowerCase()) &&
-    indication.referrerEmail && indication.referrerEmail.toLowerCase().includes(filterEmail.toLowerCase())
-  );
+  const filteredIndications = indications.filter((indication) => {
+    const searchableContent = `
+      ${indication.indicated.name} 
+      ${indication.indicated.phone} 
+      ${indication.indicated.email} 
+      ${indication.referrer.name} 
+      ${indication.referrer.email} 
+      ${indication.service} 
+      ${indication.status} 
+      ${indication.observations}
+    `.toLowerCase();
+    return searchableContent.includes(filterQuery);
+  });
 
   return (
     <div className="admin-dashboard">
       <h2>Painel do Admin</h2>
 
       <div className="filters">
-        <div>
-          <label>Filtrar por Nome do Parceiro:</label>
-          <input
-            type="text"
-            value={filterName}
-            onChange={(e) => handleFilterChange(e, 'name')}
-            placeholder="Nome do parceiro"
-          />
-        </div>
-        <div>
-          <label>Filtrar por Email do Parceiro:</label>
-          <input
-            type="email"
-            value={filterEmail}
-            onChange={(e) => handleFilterChange(e, 'email')}
-            placeholder="Email do parceiro"
-          />
-        </div>
+        <label>Filtro de dados:</label>
+        <input
+          type="text"
+          value={filterQuery}
+          onChange={handleFilterChange}
+          placeholder="Digite qualquer termo para buscar"
+        />
       </div>
 
       <div className="admin-indications">
@@ -103,37 +116,37 @@ const AdminDashboard = ({ newIndications = [] }) => {
             </tr>
           </thead>
           <tbody>
-            {filteredIndications.map((indication) => (
+            {filteredIndications.map(indication => (
               <tr key={indication.id}>
                 <td>
-                  {indication.indicatedName}<br />
-                  {indication.indicatedPhone}<br />
-                  {indication.indicatedEmail}
+                  {indication.indicated.name}<br />
+                  {indication.indicated.phone}<br />
+                  {indication.indicated.email}
                 </td>
                 <td>
-                  {indication.referrerName}<br />
-                  {indication.referrerEmail}
+                  {indication.referrer.name}<br />
+                  {indication.referrer.email}
                 </td>
                 <td>{indication.service}</td>
                 <td>{statusMap[indication.id]}</td>
-                <td>{indication.observations}</td>
+                <td>{indication.observations}</td> {/* Observação do Indicador */}
                 <td>
                   <textarea
                     placeholder="Observação do Admin"
                     value={adminObservations[indication.id] || ''}
-                    onChange={(e) => setAdminObservations({ ...adminObservations, [indication.id]: e.target.value })}
+                    onChange={(e) => handleAdminObservationChange(indication.id, e.target.value)}
                   />
                 </td>
                 <td>
                   <select
-                    value={statusMap[indication.id] || 'Fechado'}
-                    onChange={(e) => handleStatusChange(indication.id, e.target.value, adminObservations[indication.id])}
+                    value={tempStatusMap[indication.id] || statusMap[indication.id]}
+                    onChange={(e) => handleTempStatusChange(indication.id, e.target.value)}
                   >
                     <option value="Fechado">Fechado</option>
                     <option value="Negociação">Negociação</option>
                     <option value="Negado">Negado</option>
                   </select>
-                  <button onClick={() => handleStatusChange(indication.id, statusMap[indication.id], adminObservations[indication.id])}>
+                  <button onClick={() => handleStatusChange(indication.id)}>
                     Atualizar Status
                   </button>
                 </td>

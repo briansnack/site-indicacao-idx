@@ -12,14 +12,18 @@ const Login = ({ setIsAuthenticated, setUserType, setToken }) => {
     try {
       const response = await login(email, password);
 
+      // Armazenando o token no localStorage
       localStorage.setItem('token', response.token);
 
+      // Atualizando o estado do componente pai
       setIsAuthenticated(true);
-      setUserType(response.user.role);
+      setUserType(response.user.role);  
       setToken(response.token);
 
+      // Exibindo uma mensagem de sucesso
       alert('Login realizado com sucesso!');
     } catch (error) {
+      // Exibindo erro se a autenticação falhar
       setError('Usuário ou senha inválidos');
       console.error("Erro de login:", error);
     }
@@ -49,7 +53,7 @@ const Login = ({ setIsAuthenticated, setUserType, setToken }) => {
             required
           />
         </div>
-        {error && <p className="error">{error}</p>}
+        {error && <p className="error">{error}</p>}  {/* Exibe a mensagem de erro */}
         <button type="submit">Login</button>
       </form>
     </div>

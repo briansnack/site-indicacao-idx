@@ -22,8 +22,8 @@ const updatePassword = async () => {
 
   try {
     const [result] = await pool.execute(
-      'UPDATE partners SET password = ? WHERE email = ?',
-      [hashedPassword, 'parceiro1@site.com']
+      'UPDATE admins SET password = ? WHERE email = ?',
+      [hashedPassword, 'admin@site.com']
     );
     console.log('Senha atualizada com sucesso:', result);
   } catch (error) {
