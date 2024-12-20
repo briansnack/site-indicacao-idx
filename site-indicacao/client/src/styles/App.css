@@ -29,7 +29,7 @@ a, a:visited, a:focus, a:active, button, button:visited, button:focus, button:ac
   color: inherit;
   background-color: transparent;
   border-color: transparent;
-  text-decoration: none; /* Remove o sublinhado */
+  text-decoration: none; 
 }
 
 /* Estilo para o modo escuro na tela de login */
@@ -159,7 +159,7 @@ a, a:visited, a:focus, a:active, button, button:visited, button:focus, button:ac
 .logo {
   height: 80px;
   width: 80px; 
-  margin-bottom: -230px;
+  margin-bottom: -180px;
 }
 
 .services-button {
@@ -169,7 +169,7 @@ a, a:visited, a:focus, a:active, button, button:visited, button:focus, button:ac
   border: none; 
   border-radius: 5px; 
   cursor: pointer;
-  margin-bottom: -260px;
+  margin-bottom: -200px;
   font-size: 18px;
 }
 
