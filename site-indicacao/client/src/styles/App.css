@@ -159,7 +159,7 @@ a, a:visited, a:focus, a:active, button, button:visited, button:focus, button:ac
 .logo {
   height: 80px;
   width: 80px; 
-  margin-bottom: -180px;
+  margin-bottom: -230px;
 }
 
 .services-button {
@@ -169,7 +169,7 @@ a, a:visited, a:focus, a:active, button, button:visited, button:focus, button:ac
   border: none; 
   border-radius: 5px; 
   cursor: pointer;
-  margin-bottom: -200px;
+  margin-bottom: -230px;
   font-size: 18px;
 }
 
