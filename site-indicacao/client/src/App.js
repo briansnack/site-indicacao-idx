@@ -5,10 +5,9 @@ import UserDashboard from './components/UserDashboard';
 import './styles/App.css';
 
 function App() {
-  // Definindo o estado do tema (escuro ou claro) com base na configuração salva no localStorage
-  const [darkMode, setDarkMode] = useState(() => {
+  const [darkMode] = useState(() => {
     const savedTheme = localStorage.getItem('theme');
-    return savedTheme ? savedTheme === 'dark' : true;  // Define o tema como escuro por padrão, caso não exista preferência salva
+    return savedTheme ? savedTheme === 'dark' : true; 
   });
 
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -16,19 +15,11 @@ function App() {
   const [newIndications, setNewIndications] = useState([]);
 
   useEffect(() => {
-    // Adiciona a classe correspondente ao tema no body
     document.body.classList.toggle('dark-mode', darkMode);
   }, [darkMode]);
 
   const handleNewIndication = (newIndication) => {
     setNewIndications((prevIndications) => [...prevIndications, newIndication]);
-  };
-
-  // Função que alterna entre os temas claro e escuro e salva essa preferência no localStorage
-  const toggleDarkMode = () => {
-    const newDarkMode = !darkMode;  // Alterna entre os estados do tema
-    setDarkMode(newDarkMode);  // Atualiza o estado do tema
-    localStorage.setItem('theme', newDarkMode ? 'dark' : 'light');  // Salva a preferência no localStorage
   };
 
   return (
@@ -37,14 +28,33 @@ function App() {
         userType === 'admin' ? (
           <AdminDashboard newIndications={newIndications} />
         ) : (
+          <>
           <UserDashboard onNewIndication={handleNewIndication} />
+          {/* Elementos específicos do usuário */}
+          <div className="footer-extras">
+            <img
+              src="/images/logo_idx.png"
+              alt="Logo IDX"
+              className="logo"
+            />
+            <button
+              className="services-button">
+              <a href="https://digitalid.com.br/" target="_blank"
+              rel="noopener noreferrer"
+              >
+              SAIBA SOBRE OS SERVIÇOS
+              </a>
+            </button>
+          </div>
+        </> 
         )
       ) : (
         <Login setIsAuthenticated={setIsAuthenticated} setUserType={setUserType} />
       )}
 
+      {/* Footer sempre visível */}
       <footer className="footer">
-        © 2024 IDX Company. Todos os direitos reservados.
+        Criado por <a href="https://digitalid.com.br/" target="_blank" rel="noopener noreferrer"> Digital!D</a>
       </footer>
     </div>
   );
