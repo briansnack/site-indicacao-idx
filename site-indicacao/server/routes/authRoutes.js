@@ -4,6 +4,12 @@ const jwt = require('jsonwebtoken');
 const pool = require('../config/database');
 const router = express.Router();
 
+// Rota GET para depuração
+router.get('/login', (req, res) => {
+  res.status(200).json({ message: 'Endpoint funcionando, use POST para autenticar.' });
+});
+
+// Rota POST para autenticação
 router.post('/login', async (req, res) => {
   const { email, password } = req.body;
   console.log("Dados recebidos:", { email, password });
