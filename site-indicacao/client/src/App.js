@@ -39,7 +39,7 @@ function App() {
             />
             <button
               className="services-button">
-              <a href="https://digitalid.com.br/" target="_blank"
+              <a href="https://quemsomos.idxcompany.com.br/" target="_blank"
               rel="noopener noreferrer"
               >
               SAIBA SOBRE OS SERVIÇOS
